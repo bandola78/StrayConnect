@@ -1,37 +1,55 @@
 package models;
 
-import models.AnimalAttributes.Gender;
-import models.AnimalAttributes.Species;
-import models.AnimalAttributes.Size;
+import java.time.LocalDate;
 
+public class Donation {
+    private String donorName;
+    private double amount;          
+    private String donationType;    
+    private LocalDate donationDate; 
 
-public class RegisteredPet extends Animal {
-    private String ownerName;
-
-    public RegisteredPet(String name, Gender gender, Species species, Enum<?> color, int approxAge,
-                         Size size, boolean isVaccinated, String healthStatus, String ownerName) {
-        super(name, gender, species, color, approxAge, size, isVaccinated, healthStatus);
-        this.ownerName = ownerName;
+    public Donation(String donorName, double amount, String donationType, LocalDate donationDate) {
+        this.donorName = donorName;
+        this.amount = amount;
+        this.donationType = donationType;
+        this.donationDate = donationDate;
     }
 
-    public String getOwnerName() { 
-        return ownerName; 
+    public String getDonorName() { 
+        return donorName; 
         }
 
-    public void setOwnerName(String ownerName) { 
-        this.ownerName = ownerName; 
+    public void setDonorName(String donorName) { 
+        this.donorName = donorName; 
         }
 
-    @Override
-    public void displayInfo() {
-        System.out.println("Registered Pet - Name: " + getName());
-        System.out.println("Gender: " + getGender());
-        System.out.println("Species: " + getSpecies());
-        System.out.println("Color: " + getColor());
-        System.out.println("Age (Approximate): " + getApproxAge());
-        System.out.println("Size: " + getSize());
-        System.out.println("Vaccinated: " + (isVaccinated() ? "Yes" : "No"));
-        System.out.println("Health Status: " + getHealthStatus());
-        System.out.println("Owner: " + getOwnerName());
+    public double getAmount() { 
+        return amount; 
+        }
+
+    public void setAmount(double amount) { 
+        this.amount = amount; 
+        }
+
+    public String getDonationType() { 
+        return donationType; 
+        }
+
+    public void setDonationType(String donationType) { 
+        this.donationType = donationType; 
+        }
+
+    public LocalDate getDonationDate() { 
+        return donationDate; 
+        }
+        
+    public void setDonationDate(LocalDate donationDate) { 
+        this.donationDate = donationDate; 
+        }
+
+    public void displayDonationInfo() {
+        System.out.println("Donation - Donor: " + getDonorName());
+        System.out.println("Amount: " + amount + ", Type: " + getDonationType());
+        System.out.println("Date: " + getDonationDate());
     }
 }
