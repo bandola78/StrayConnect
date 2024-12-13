@@ -65,7 +65,7 @@ public abstract class Animal {
         this.approxAge = approxAge; 
         }
 
-    public Size getsize() {
+    public Size getSize() {
         return size;
     }
 
