@@ -1,11 +1,11 @@
 package services;
 
 import models.StrayAnimal;
-import static models.AnimalAttributes.Species;
-import static models.AnimalAttributes.Gender;
-import static models.AnimalAttributes.DogColor;
-import static models.AnimalAttributes.CatColor;
-import static models.AnimalAttributes.Size;
+import models.AnimalAttributes.DogColor;
+import models.AnimalAttributes.CatColor;
+import models.AnimalAttributes.Gender;
+import models.AnimalAttributes.Size;
+import models.AnimalAttributes.Species;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,65 +22,108 @@ public class AnimalServices {
 
     public void intakeAnimal(Scanner scanner) {
         System.out.print("Enter animal name: ");
-        String name = scanner.nextLine();
+        String name = scanner.nextLine().trim();
+        name = utils.DataValidator.formatName(name);
+        if (name == null) {
+            System.out.println("Invalid name. Returning to main menu.");
+            return;
+        }
 
-        System.out.print("Enter animal gender (MALE/FEMALE): ");
-        Gender gender = Gender.valueOf(scanner.nextLine().toUpperCase());
+        System.out.print("Enter animal species (DOG/CAT): ");
+        String speciesInput = scanner.nextLine().trim().toUpperCase();
 
-        System.out.print("Enter animal species (CAT/DOG): ");
-        Species species = Species.valueOf(scanner.nextLine().toUpperCase());
+        Species speciesEnum;
+        try {
+            speciesEnum = Species.valueOf(speciesInput);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid species. Returning to main menu.");
+            return;
+        }
 
-        Enum<?> color;
-        if (species == Species.CAT) {
-            System.out.print("Enter cat color (BLACK/WHITE/GRAY/ORANGE/TABBY/CALICO/TORTOISESHELL/MIXED): ");
-            color = CatColor.valueOf(scanner.nextLine().toUpperCase());
-        } else {
-            System.out.print("Enter dog color (BLACK/BROWN/WHITE/GOLDEN/GRAY/MIXED): ");
-            color = DogColor.valueOf(scanner.nextLine().toUpperCase());
+        System.out.print("Enter animal gender (M/F): ");
+        String genderInput = scanner.nextLine().trim();
+        String gender = utils.DataValidator.mapGender(genderInput);
+        if (gender == null) {
+            System.out.println("Invalid gender. Returning to main menu.");
+            return;
+        }
+
+        System.out.print("Enter animal color: ");
+        String colorInput = scanner.nextLine().trim().toUpperCase();
+
+        Enum<?> colorEnum;
+        try {
+            if (speciesEnum == Species.DOG) {
+                colorEnum = DogColor.valueOf(colorInput);
+            } else if (speciesEnum == Species.CAT) {
+                colorEnum = CatColor.valueOf(colorInput);
+            } else {
+                System.out.println("Unsupported species. Returning to main menu.");
+                return;
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid color for " + speciesEnum + ". Returning to main menu.");
+            return;
         }
 
         System.out.print("Enter animal age: ");
-        int age = Integer.parseInt(scanner.nextLine());
+        int age;
+        try {
+            age = Integer.parseInt(scanner.nextLine().trim());
+            if (!utils.DataValidator.validateNumberRange(age, 0, 30)) {
+                System.out.println("Invalid age. Returning to main menu.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Returning to main menu.");
+            return;
+        }
 
-        System.out.print("Is the animal vaccinated? (true/false): ");
-        boolean vaccinated = Boolean.parseBoolean(scanner.nextLine());
+        System.out.print("Is the animal vaccinated? (Yes/No): ");
+        String vaccinatedInput = scanner.nextLine().trim();
+        if (!utils.DataValidator.validateYesNo(vaccinatedInput)) {
+            System.out.println("Invalid vaccination status. Returning to main menu.");
+            return;
+        }
+        boolean isVaccinated = "YES".equalsIgnoreCase(vaccinatedInput);
 
-        System.out.print("Enter health status: ");
-        String healthStatus = scanner.nextLine();
+        System.out.print("Enter health status (Healthy or specify condition): ");
+        String healthStatus = scanner.nextLine().trim();
+        if (!healthStatus.equalsIgnoreCase("Healthy")) {
+            healthStatus = "Condition: " + healthStatus;
+        }
 
-        System.out.print("Enter rescue location: ");
-        String locationFound = scanner.nextLine();
+        System.out.print("Enter rescue location (Landmark, Barangay, City): ");
+        String location = scanner.nextLine().trim();
+        if (!location.contains(",") || location.split(",").length < 3) {
+            System.out.println("Invalid location. Returning to main menu.");
+            return;
+        }
 
-        System.out.print("Enter rescuer name: ");
-        String rescuerName = scanner.nextLine();
-
-        System.out.print("Enter rescuer contact info: ");
-        String rescuerContact = scanner.nextLine();
+        System.out.print("Enter rescuer contact (+63XXXXXXXXXX or 'None'): ");
+        String rescuerContact = scanner.nextLine().trim();
+        if (!utils.DataValidator.validateContactNumber(rescuerContact)) {
+            System.out.println("Invalid contact. Returning to main menu.");
+            return;
+        }
 
         StrayAnimal strayAnimal = new StrayAnimal(
-            name, 
-            gender, 
-            species, 
-            color, 
-            age, 
-            Size.MEDIUM, 
-            vaccinated, 
-            healthStatus, 
-            locationFound, 
-            LocalDate.now(), 
-            rescuerName, 
-            rescuerContact
+                name,
+                Gender.valueOf(gender),
+                speciesEnum,
+                colorEnum,
+                age,
+                Size.MEDIUM,
+                isVaccinated,
+                healthStatus,
+                location,
+                LocalDate.now(),
+                "Rescuer",
+                rescuerContact
         );
-        
+
         strayAnimals.add(strayAnimal);
-
-        System.out.println("Stray animal intake completed! Details:");
-        displayAnimalDetails(strayAnimal);
-    }
-
-    public void displayAnimalDetails(StrayAnimal animal) {
-        System.out.println("Stray Animal Details:");
-        animal.displayInfo();
+        System.out.println("Animal intake completed!");
     }
 
     public List<StrayAnimal> getStrayAnimals() {
