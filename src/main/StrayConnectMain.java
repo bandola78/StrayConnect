@@ -5,6 +5,8 @@ import models.AnimalAttributes.*;
 import services.*;
 import reports.*;
 import utils.*;
+import models.StrayAnimal;
+import services.AnimalServices;
 
 import java.util.Scanner;
 import java.util.List;
@@ -17,6 +19,8 @@ public class StrayConnectMain {
     private static DonationServices donationServices = new DonationServices();
     private static FosterServices fosterServices = new FosterServices();
     private static ReportsGenerator reportGenerator = new ReportsGenerator();
+    private static PetRegistrationServices petServices = new PetRegistrationServices();
+
 
     private static List<AdoptionRecord> adoptionRecords = new ArrayList<>();
     private static List<Donation> donations = new ArrayList<>();
@@ -30,9 +34,11 @@ public class StrayConnectMain {
             System.out.println("2. Surrender Stray");
             System.out.println("3. Foster");
             System.out.println("4. Donate");
-            System.out.println("5. Want to Be a Volunteer?");
-            System.out.println("6. Generate Reports");
-            System.out.println("7. Exit");
+            System.out.println("5. Register a Pet");
+            System.out.println("6. Want to Be a Volunteer?");
+            System.out.println("7. Generate Reports");
+            System.out.println("8. View Stray Connect Address");
+            System.out.println("9.Exit");
             System.out.print("Enter your choice: ");
 
             try {
@@ -52,12 +58,18 @@ public class StrayConnectMain {
                             handleDonation(scanner);
                             break;
                         case 5:
-                            volunteerServices.registerVolunteer(scanner);
+                            petServices.registerPet(scanner);
                             break;
                         case 6:
-                            handleReports(scanner);
+                            volunteerServices.registerVolunteer(scanner);
                             break;
                         case 7:
+                            handleReports(scanner);
+                            break;
+                        case 8:
+                            displayCenterDetails();
+                            break;
+                        case 9:
                             System.out.println("Thank you for using Stray Connect. Goodbye!");
                             scanner.close();
                             System.exit(0);
@@ -143,7 +155,7 @@ public class StrayConnectMain {
 
     private static void handleDonation(Scanner scanner) {
         System.out.println("\n=== Donate ===");
-        donationServices.collectDonation(scanner);
+        donationServices.handleDonation(scanner);
     }
 
     private static void handleReports(Scanner scanner) {
@@ -173,4 +185,17 @@ public class StrayConnectMain {
             System.out.println("Invalid input. Please enter a number.");
         }
     }
+
+    public static void displayCenterDetails() {
+        System.out.println("=== Stray Connect Animal Rescue Center ===");
+        System.out.println("Address:");
+        System.out.println("Sitio Maharlika, Barangay San Isidro");
+        System.out.println("Lipa City, Batangas 4217, Philippines");
+        System.out.println("We are committed to rescuing and rehoming animals in need.");
+        try {
+            Thread.sleep(8000);
+        } catch (InterruptedException e) {
+            System.out.println("An error occurred while waiting. Returning to the main menu immediately.");
+        }
+    }    
 }
