@@ -1,36 +1,44 @@
 package utils;
 
+import java.util.Set;
+
 public class DataValidator {
 
-    /**
-     * Validates that a string is not null or empty.
-     * 
-     * @param input The string to validate.
-     * @return True if the string is valid, false otherwise.
-     */
-    public static boolean validateString(String input) {
-        return input != null && !input.trim().isEmpty();
+    private static final Set<String> VALID_COLORS = Set.of("BLACK", "WHITE", "BROWN", "GREY", "ORANGE", "OTHER");
+    private static final Set<String> INVALID_NAMES = Set.of("ME", "I", "YOU", "NONE");
+
+    public static String formatName(String input) {
+        if (input == null || INVALID_NAMES.contains(input.toUpperCase().trim())) {
+            return null;
+        }
+        String[] words = input.trim().split("\\s+");
+        StringBuilder formattedName = new StringBuilder();
+        for (String word : words) {
+            formattedName.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase()).append(" ");
+        }
+        return formattedName.toString().trim();
     }
 
-    /**
-     * Validates that a number is within a specified range.
-     * 
-     * @param number The number to validate.
-     * @param min The minimum value (inclusive).
-     * @param max The maximum value (inclusive).
-     * @return True if the number is within range, false otherwise.
-     */
-    public static boolean validateNumberInRange(int number, int min, int max) {
+    public static String mapGender(String input) {
+        if ("M".equalsIgnoreCase(input)) return "MALE";
+        if ("F".equalsIgnoreCase(input)) return "FEMALE";
+        return null;
+    }
+
+    public static boolean validateColor(String color) {
+        return VALID_COLORS.contains(color.toUpperCase());
+    }
+
+    public static boolean validateContactNumber(String contact) {
+        if ("NONE".equalsIgnoreCase(contact)) return true;
+        return contact.matches("\\+63\\d{10}");
+    }
+
+    public static boolean validateNumberRange(int number, int min, int max) {
         return number >= min && number <= max;
     }
 
-    /**
-     * Validates that a boolean input is either "true" or "false".
-     * 
-     * @param input The string to validate.
-     * @return True if the input is a valid boolean, false otherwise.
-     */
-    public static boolean validateBoolean(String input) {
-        return "true".equalsIgnoreCase(input) || "false".equalsIgnoreCase(input);
+    public static boolean validateYesNo(String input) {
+        return "YES".equalsIgnoreCase(input) || "NO".equalsIgnoreCase(input);
     }
 }
