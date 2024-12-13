@@ -2,6 +2,10 @@ package utils;
 
 import java.util.Set;
 
+import models.AnimalAttributes.CatColor;
+import models.AnimalAttributes.DogColor;
+import models.AnimalAttributes.Species;
+
 public class DataValidator {
 
     private static final Set<String> VALID_COLORS = Set.of("BLACK", "WHITE", "BROWN", "GREY", "ORANGE", "OTHER");
@@ -25,8 +29,32 @@ public class DataValidator {
         return null;
     }
 
-    public static boolean validateColor(String color) {
-        return VALID_COLORS.contains(color.toUpperCase());
+    public static boolean validateDogColor(String color) {
+        try {
+            DogColor.valueOf(color.toLowerCase()); 
+            return true;  
+        } catch (IllegalArgumentException e) {
+            return false;  
+        }
+    }
+
+    public static boolean validateCatColor(String color) {
+        try {
+            CatColor.valueOf(color.toLowerCase());  
+            return true;  
+        } catch (IllegalArgumentException e) {
+            return false;  
+        }
+    }
+
+    public static boolean validateColor(String color, Species species) {
+        if (species == Species.DOG) {
+            return validateDogColor(color); 
+        } else if (species == Species.CAT) {
+            return validateCatColor(color);  
+        } else {
+            return false; 
+        }
     }
 
     public static boolean validateContactNumber(String contact) {
