@@ -59,16 +59,16 @@ public class StrayAnimal extends Animal {
     public void displayInfo() {
         System.out.println("Stray Animal - Name: " + getName());
         System.out.println("Gender: " + getGender());
-        System.out.println("Species: " + getSpecies())
-        System.out.println("Color: " + getColor())
+        System.out.println("Species: " + getSpecies());
+        System.out.println("Color: " + getColor());
         System.out.println("Age (Approximate): " + getApproxAge());
-        System.out.println("Size:" + getSize("S" : "M" : "L") )
+        System.out.println("Size:" + getSize());
         System.out.println("Vaccinated: " + (isVaccinated() ? "Yes" : "No"));
         System.out.println("Health Status: " + getHealthStatus());
 
-        System.out.println("Location Found: " + getlocationFound("Landmark/Barangay/City"))
-        System.out.println("Date Rescued: " + getdateRescued("MM/DD/YY"));
-        System.out.println("Rescuer: " + getrescuerName())
-        System.out.println("Contact: " + getrescuerContact());
+        System.out.println("Location Found: " + getLocationFound());
+        System.out.println("Date Rescued: " + getDateRescued());
+        System.out.println("Rescuer: " + getRescuerName());
+        System.out.println("Contact: " + getRescuerContact());
     }
 }
