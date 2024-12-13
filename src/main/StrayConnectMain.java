@@ -1,44 +1,73 @@
+package main;
+
 import models.*;
 import models.AnimalAttributes.*;
+import services.*;
+import reports.*;
+import utils.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class StrayConnectMain {
 
-    private static List<Volunteer> volunteers = new ArrayList<>();
-    private static List<StrayAnimal> strayAnimals = new ArrayList<>();
-    private static List<RegisteredPet> registeredPets = new ArrayList<>();
+    private static AnimalServices animalServices = new AnimalServices();
+    private static VolunteerServices volunteerServices = new VolunteerServices();
+    private static DonationServices donationServices = new DonationServices();
+    private static FosterServices fosterServices = new FosterServices();
+    private static ReportsGenerator reportGenerator = new ReportsGenerator();
+
     private static List<AdoptionRecord> adoptionRecords = new ArrayList<>();
+    private static List<Donation> donations = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-     
         while (true) {
-            System.out.println("\n=== Stray Connect ===");
-            System.out.println("1. Adoption");
-            System.out.println("2. Intake (Stray Animal)");
-            System.out.println("3. Pet Registration");
-            System.out.println("4. Volunteer Registration");
-            System.out.println("5. Exit");
+            System.out.println("\n=== WELCOME TO STRAY CONNECT! ===");
+            System.out.println("1. Adopt");
+            System.out.println("2. Surrender Stray");
+            System.out.println("3. Foster");
+            System.out.println("4. Donate");
+            System.out.println("5. Want to Be a Volunteer?");
+            System.out.println("6. Generate Reports");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
 
-            switch (choice) {
-                case 1 -> handleAdoption(scanner);
-                case 2 -> handleIntake(scanner);
-                case 3 -> handlePetRegistration(scanner);
-                case 4 -> handleVolunteerRegistration(scanner);
-                case 5 -> {
-                    System.out.println("Thank you for using Stray Connect. Goodbye!");
-                    scanner.close();
-                    System.exit(0);
+                switch (choice) {
+                        case 1:
+                            handleAdoption(scanner);
+                            break;
+                        case 2:
+                            animalServices.intakeAnimal(scanner);
+                            break;
+                        case 3:
+                            handleFoster(scanner);
+                            break;
+                        case 4:
+                            handleDonation(scanner);
+                            break;
+                        case 5:
+                            volunteerServices.registerVolunteer(scanner);
+                            break;
+                        case 6:
+                            handleReports(scanner);
+                            break;
+                        case 7:
+                            System.out.println("Thank you for using Stray Connect. Goodbye!");
+                            scanner.close();
+                            System.exit(0);
+                            break;
+                        default:
+                            System.out.println("Invalid choice. Please try again.");
+                    }
                 }
-                default -> System.out.println("Invalid choice. Please try again.");
+            catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
             }
         }
     }
@@ -46,114 +75,102 @@ public class StrayConnectMain {
     private static void handleAdoption(Scanner scanner) {
         System.out.println("\n=== Adoption ===");
 
-        if (strayAnimals.isEmpty()) {
+        if (animalServices.getStrayAnimals().isEmpty()) {
             System.out.println("No animals available for adoption.");
             return;
         }
-
-        // List all stray animals for adoption
+        
         System.out.println("Available Animals for Adoption:");
+        var strayAnimals = animalServices.getStrayAnimals();
         for (int i = 0; i < strayAnimals.size(); i++) {
             System.out.println((i + 1) + ". " + strayAnimals.get(i).getName() + " (" + strayAnimals.get(i).getSpecies() + ")");
         }
 
-        System.out.print("Enter the number of the animal to adopt: ");
-        int animalIndex = Integer.parseInt(scanner.nextLine()) - 1;
+        try {
+            System.out.print("Enter the number of the animal to adopt: ");
+            int animalIndex = Integer.parseInt(scanner.nextLine()) - 1;
 
-        if (animalIndex < 0 || animalIndex >= strayAnimals.size()) {
-            System.out.println("Invalid selection.");
+            if (animalIndex < 0 || animalIndex >= strayAnimals.size()) {
+                System.out.println("Invalid selection.");
+                return;
+            }
+
+            StrayAnimal selectedAnimal = strayAnimals.get(animalIndex);
+
+            System.out.print("Enter adopter's name: ");
+            String adopterName = scanner.nextLine();
+
+            AdoptionRecord adoptionRecord = new AdoptionRecord(adopterName, selectedAnimal, java.time.LocalDate.now());
+            adoptionRecords.add(adoptionRecord);
+            animalServices.getStrayAnimals().remove(selectedAnimal);
+
+            System.out.println("Adoption completed! Details:");
+            adoptionRecord.displayAdoptionInfo();
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+        }
+    }
+
+    private static void handleFoster(Scanner scanner) {
+        System.out.println("\n=== Foster ===");
+
+        if (animalServices.getStrayAnimals().isEmpty()) {
+            System.out.println("No animals available for fostering.");
             return;
         }
 
-        StrayAnimal selectedAnimal = strayAnimals.get(animalIndex);
+        System.out.println("Available Animals for Fostering:");
+        var strayAnimals = animalServices.getStrayAnimals();
+        for (int i = 0; i < strayAnimals.size(); i++) {
+            System.out.println((i + 1) + ". " + strayAnimals.get(i).getName() + " (" + strayAnimals.get(i).getSpecies() + ")");
+        }
 
-        System.out.print("Enter adopter's name: ");
-        String adopterName = scanner.nextLine();
+        try {
+            System.out.print("Enter the number of the animal to foster: ");
+            int animalIndex = Integer.parseInt(scanner.nextLine()) - 1;
 
-        // Create an adoption record and remove the animal from strayAnimals
-        AdoptionRecord adoptionRecord = new AdoptionRecord(adopterName, selectedAnimal, LocalDate.now());
-        adoptionRecords.add(adoptionRecord);
-        strayAnimals.remove(selectedAnimal);
+            if (animalIndex < 0 || animalIndex >= strayAnimals.size()) {
+                System.out.println("Invalid selection.");
+                return;
+            }
 
-        System.out.println("Adoption completed! Details:");
-        adoptionRecord.displayAdoptionInfo();
+            StrayAnimal selectedAnimal = strayAnimals.get(animalIndex);
+            fosterServices.initiateFoster(scanner, selectedAnimal);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+        }
     }
 
-    private static void handleIntake(Scanner scanner) {
-        System.out.println("\n=== Intake (Stray Animal) ===");
-
-        System.out.print("Enter animal name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter animal gender (M/F): ");
-        Gender gender = scanner.nextLine().equalsIgnoreCase("M") ? Gender.M : Gender.F;
-        System.out.print("Enter animal species (CAT/DOG): ");
-        Species species = scanner.nextLine().equalsIgnoreCase("CAT") ? Species.CAT : Species.DOG;
-        System.out.print("Enter animal color: ");
-        String color = scanner.nextLine();
-        System.out.print("Enter animal age: ");
-        int age = Integer.parseInt(scanner.nextLine());
-        System.out.print("Is the animal vaccinated? (true/false): ");
-        boolean vaccinated = Boolean.parseBoolean(scanner.nextLine());
-        System.out.print("Enter health status: ");
-        String healthStatus = scanner.nextLine();
-        System.out.print("Enter animal size (SMALL, MEDIUM, LARGE): ");
-        Size size = Size.valueOf(scanner.nextLine().toUpperCase());
-        System.out.print("Enter rescue location: ");
-        String locationFound = scanner.nextLine();
-        System.out.print("Enter rescuer name: ");
-        String rescuerName = scanner.nextLine();
-        System.out.print("Enter rescuer contact: ");
-        String rescuerContact = scanner.nextLine();
-
-        StrayAnimal strayAnimal = new StrayAnimal(name, gender, species, color, age, vaccinated, healthStatus, size, locationFound, LocalDate.now(), rescuerName, rescuerContact);
-        strayAnimals.add(strayAnimal);
-
-        System.out.println("Stray animal intake completed!");
-        strayAnimal.displayInfo();
+    private static void handleDonation(Scanner scanner) {
+        System.out.println("\n=== Donate ===");
+        donationServices.collectDonation(scanner);
     }
 
-    private static void handlePetRegistration(Scanner scanner) {
-        System.out.println("\n=== Pet Registration ===");
+    private static void handleReports(Scanner scanner) {
+        System.out.println("\n=== Generate Reports ===");
+        System.out.println("1. Adoption Report");
+        System.out.println("2. Donation Report");
+        System.out.println("3. Volunteer Report");
+        System.out.print("Select report to generate: ");
 
-        System.out.print("Enter pet name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter pet gender (M/F): ");
-        Gender gender = scanner.nextLine().equalsIgnoreCase("M") ? Gender.M : Gender.F;
-        System.out.print("Enter pet species (CAT/DOG): ");
-        Species species = scanner.nextLine().equalsIgnoreCase("CAT") ? Species.CAT : Species.DOG;
-        System.out.print("Enter pet color: ");
-        String color = scanner.nextLine();
-        System.out.print("Enter pet age: ");
-        int age = Integer.parseInt(scanner.nextLine());
-        System.out.print("Is the pet vaccinated? (true/false): ");
-        boolean vaccinated = Boolean.parseBoolean(scanner.nextLine());
-        System.out.print("Enter health status: ");
-        String healthStatus = scanner.nextLine();
-        System.out.print("Enter pet size (SMALL, MEDIUM, LARGE): ");
-        Size size = Size.valueOf(scanner.nextLine().toUpperCase());
-        System.out.print("Enter owner name: ");
-        String ownerName = scanner.nextLine();
+        try {
+            int reportChoice = Integer.parseInt(scanner.nextLine());
 
-        RegisteredPet registeredPet = new RegisteredPet(name, gender, species, color, age, vaccinated, healthStatus, size, ownerName);
-        registeredPets.add(registeredPet);
-
-        System.out.println("Pet registration completed!");
-        registeredPet.displayInfo();
-    }
-
-    private static void handleVolunteerRegistration(Scanner scanner) {
-        System.out.println("\n=== Volunteer Registration ===");
-
-        System.out.print("Enter volunteer name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter volunteer contact info: ");
-        String contactInfo = scanner.nextLine();
-
-        Volunteer volunteer = new Volunteer(name, contactInfo);
-        volunteers.add(volunteer);
-
-        System.out.println("Volunteer registration completed!");
-        volunteer.displayVolunteerInfo();
+            switch (reportChoice) {
+                case 1: 
+                    reportGenerator.generateAdoptionReport(adoptionRecords);
+                    break;
+                case 2: 
+                    reportGenerator.generateDonationReport(donations);
+                    break;
+                case 3: 
+                    reportGenerator.generateVolunteerReport(volunteerServices.getVolunteers());
+                    break;
+                default:
+                    System.out.println("Invalid report choice. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
+        }
     }
 }
-
