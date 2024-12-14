@@ -191,7 +191,7 @@ report.generateReport();
 
 ### **Goal 15: Life on Land**
 
-![Life on Land - SDG15](images/logo.png)
+![Life on Land - SDG15](https://github.com/bandola78/StrayConnect/blob/main/images/sdg15.png)
 
 Stray Connect directly contributes to the preservation of terrestrial ecosystems and biodiversity by addressing a growing concern: the welfare of stray animals. Here’s how:
 
