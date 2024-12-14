@@ -2,12 +2,14 @@ package services;
 
 import models.StrayAnimal;
 import models.Volunteer;
+import utils.InputHelper;
 
 import java.util.Scanner;
 
 public class FosterServices {
 
     public void initiateFoster(Scanner scanner, StrayAnimal strayAnimal) {
+        InputHelper.clearConsole();
         System.out.print("Enter your name: ");
         String fosterName = scanner.nextLine();
         System.out.print("Enter your contact info: ");
@@ -25,5 +27,8 @@ public class FosterServices {
         System.out.println("Name: " + volunteer.getName());
         System.out.println("Contact Info: " + volunteer.getContactInfo());
         System.out.println("Animal Fostered: " + animal.getName() + " (" + animal.getSpecies() + ")");
+    
+        InputHelper.pause(3);
+        InputHelper.clearConsole();
     }
 }
