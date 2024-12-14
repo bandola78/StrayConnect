@@ -1,6 +1,7 @@
 package services;
 
 import models.StrayAnimal;
+import utils.InputHelper;
 import models.AnimalAttributes.DogColor;
 import models.AnimalAttributes.CatColor;
 import models.AnimalAttributes.Gender;
@@ -21,11 +22,13 @@ public class AnimalServices {
     }
 
     public void intakeAnimal(Scanner scanner) {
+        InputHelper.clearConsole();
         System.out.print("Enter animal name: ");
         String name = scanner.nextLine().trim();
         name = utils.DataValidator.formatName(name);
         if (name == null) {
             System.out.println("Invalid name. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
 
@@ -37,6 +40,7 @@ public class AnimalServices {
             speciesEnum = Species.valueOf(speciesInput);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid species. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
 
@@ -45,7 +49,19 @@ public class AnimalServices {
         String gender = utils.DataValidator.mapGender(genderInput);
         if (gender == null) {
             System.out.println("Invalid gender. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
+        }
+
+        System.out.println("Available colors for " + speciesEnum + ":");
+        if (speciesEnum == Species.DOG) {
+            for (DogColor color : DogColor.values()) {
+                System.out.println("- " + color);
+            }
+        } else if (speciesEnum == Species.CAT) {
+            for (CatColor color : CatColor.values()) {
+                System.out.println("- " + color);
+            }
         }
 
         System.out.print("Enter animal color: ");
@@ -63,6 +79,7 @@ public class AnimalServices {
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid color for " + speciesEnum + ". Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
 
@@ -76,6 +93,7 @@ public class AnimalServices {
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
 
@@ -83,6 +101,7 @@ public class AnimalServices {
         String vaccinatedInput = scanner.nextLine().trim();
         if (!utils.DataValidator.validateYesNo(vaccinatedInput)) {
             System.out.println("Invalid vaccination status. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
         boolean isVaccinated = "YES".equalsIgnoreCase(vaccinatedInput);
@@ -97,13 +116,21 @@ public class AnimalServices {
         String location = scanner.nextLine().trim();
         if (!location.contains(",") || location.split(",").length < 3) {
             System.out.println("Invalid location. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
 
-        System.out.print("Enter rescuer contact (+63XXXXXXXXXX or 'None'): ");
-        String rescuerContact = scanner.nextLine().trim();
-        if (!utils.DataValidator.validateContactNumber(rescuerContact)) {
+        System.out.print("Enter rescuer contact (10-digit number or 'None'): +63 ");
+        String rescuerContactInput = scanner.nextLine().trim();
+
+        String rescuerContact;
+        if ("None".equalsIgnoreCase(rescuerContactInput)) {
+            rescuerContact = "None";
+        } else if (rescuerContactInput.matches("\\d{10}")) {
+            rescuerContact = "+63" + rescuerContactInput;
+        } else {
             System.out.println("Invalid contact. Returning to main menu.");
+            InputHelper.pause(2); 
             return;
         }
 
@@ -124,6 +151,8 @@ public class AnimalServices {
 
         strayAnimals.add(strayAnimal);
         System.out.println("Animal intake completed!");
+        InputHelper.pause(3); 
+        InputHelper.clearConsole();
     }
 
     public List<StrayAnimal> getStrayAnimals() {
