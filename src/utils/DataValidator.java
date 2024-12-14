@@ -57,6 +57,8 @@ public class DataValidator {
         }
     }
 
+    
+
     public static boolean validateContactNumber(String contact) {
         if ("NONE".equalsIgnoreCase(contact)) return true;
         return contact.matches("\\+63\\d{10}");
