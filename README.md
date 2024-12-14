@@ -240,6 +240,7 @@ This platform demonstrates how technology can be leveraged to achieve meaningful
 
 ## File Structure
 
+```
    src/
    |
    ├── main/
