@@ -25,12 +25,12 @@ public class StrayConnectMain {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            InputHelper.clearConsole(); // Clear screen before showing the menu
+            InputHelper.clearConsole(); 
             displayMenu();
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
-                InputHelper.clearConsole(); // Clear screen after input to ensure smooth transitions
+                InputHelper.clearConsole(); 
 
                 switch (choice) {
                     case 1:
