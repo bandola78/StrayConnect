@@ -296,7 +296,7 @@ src/
 
 ---
 
-## About the Developer
+## About the Developer 👋 👩‍💻
 
 Hi, I'm Jobelyn Bandola, the developer of Stray Connect. This project was created as part of my Object-Oriented Programming (OOP) final project, adhering to OOP principles while contributing to Sustainable Development Goals. Developing Stray Connect has been a rewarding experience, allowing me to refine my programming skills and explore software development concepts like database management and logic building.
 
