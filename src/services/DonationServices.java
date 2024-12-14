@@ -1,6 +1,7 @@
 package services;
 
 import models.Donation;
+import utils.InputHelper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,58 +13,45 @@ public class DonationServices {
     private List<Donation> donations = new ArrayList<>();
 
     public void handleDonation(Scanner scanner) {
-        System.out.print("Enter your name: ");
-        String donorName = scanner.nextLine().trim();
-        donorName = utils.DataValidator.formatName(donorName);
-        if (donorName == null) {
-            System.out.println("Invalid name. Returning to main menu.");
-            return;
-        }
+        InputHelper.clearConsole(); 
+        System.out.println("\n=== Donate ===");
 
-        System.out.println("Donation Type: 1. Money  2. Food");
-        int type;
+        System.out.println("1. Donate Money");
+        System.out.println("2. Donate Food");
+        System.out.print("Choose donation type: ");
+
         try {
-            type = Integer.parseInt(scanner.nextLine().trim());
+            int donationType = Integer.parseInt(scanner.nextLine());
+
+            switch (donationType) {
+                case 1:
+                    System.out.print("Enter amount to donate: ");
+                    double amount = Double.parseDouble(scanner.nextLine());
+                    donations.add(new Donation("Anonymous", amount, "Money", LocalDate.now()));
+                    System.out.println("Thank you for your monetary donation!");
+                    break;
+
+                case 2:
+                    System.out.print("Enter amount of food in kilograms: ");
+                    int foodWeight = Integer.parseInt(scanner.nextLine());
+                    if (foodWeight > 20) {
+                        System.out.println("Please deliver your donation to our center. Address will be provided.");
+                    } else {
+                        System.out.println("Thank you! The shelter can pick up your donation.");
+                    }
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Returning to main menu.");
+                    InputHelper.pause(2);
+                    return;
+            }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid option. Returning to main menu.");
-            return;
+            System.out.println("Invalid input. Please enter a number.");
         }
 
-        if (type == 1) {
-            System.out.print("Enter amount to donate: ");
-            double amount;
-            try {
-                amount = Double.parseDouble(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Returning to main menu.");
-                return;
-            }
-            donations.add(new Donation(donorName, amount, "Money", LocalDate.now()));
-            System.out.println("Thank you for your monetary donation!");
-        } else if (type == 2) {
-            System.out.print("Enter food donation in kilograms: ");
-            int kilograms;
-            try {
-                kilograms = Integer.parseInt(scanner.nextLine().trim());
-                if (kilograms <= 0) {
-                    System.out.println("Invalid amount. Returning to main menu.");
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid amount. Returning to main menu.");
-                return;
-            }
-            if (kilograms <= 20) {
-                System.out.println("Thank you! The shelter can pick up your donation.");
-            } else {
-                System.out.println("Please deliver the food donation to our center at:");
-                System.out.println("Stray Connect Animal Rescue Center");
-                System.out.println("Sitio Maharlika, Barangay San Isidro");
-                System.out.println("Lipa City, Batangas 4217, Philippines");
-            }
-        } else {
-            System.out.println("Invalid option. Returning to main menu.");
-        }
+        InputHelper.pause(3); // Pause after completion
+        InputHelper.clearConsole(); // Clear console before returning to menu
     }
 
     public List<Donation> getDonations() {
