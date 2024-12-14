@@ -1,4 +1,4 @@
-
+package main;
 
 import models.*;
 import models.AnimalAttributes.*;
