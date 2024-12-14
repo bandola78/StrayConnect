@@ -241,12 +241,29 @@ This platform demonstrates how technology can be leveraged to achieve meaningful
 ## File Structure
 
    src/
+   |
    ├── main/
    │   └── StrayConnectMain.java
+   |
    ├── models/
+   |    └── AdoptionRecord.java
+   |    └── Animal.java
+   |    └── AnimalAttributes.java
+   |    └── Donation.java
+   |    └── RegisteredPet.java
+   |    └── StrayAnimal.java
+   |    └── Volunteer.java
    ├── services/
+   |    └── AnimalServices.java
+   |    └── DonationServices.java
+   |    └── FosterServices.java
+   |    └── PetRegistrationServices.java
+   |    └── VolunteerServices.java
    ├── reports/
+   |    └── ReportsGenerator.java
    ├── utils/
+   |    └── DataValidator.java
+   |    └── InputHelper.java
    README.md
    ```
 
