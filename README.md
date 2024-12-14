@@ -40,19 +40,24 @@ Stray Connect is an interactive console application that provides a menu-based s
 ### Demo
 Below are screenshots of the application in action:
 
-![Main Menu](https://github.com/bandola78/StrayConnect/blob/main/images/Main%20Menu.png)   
+![Main Menu](https://github.com/bandola78/StrayConnect/blob/main/images/Main%20Menu.png)  
+
 Displays the list of features available.                 
 
 ![Adoption Process](https://github.com/bandola78/StrayConnect/blob/main/images/Adoption.png) 
+
 Step-by-step flow of how users can adopt a stray animal.  
 
 ![Surrender Workflow](https://github.com/bandola78/StrayConnect/blob/main/images/Surrender.png) 
+
 Captures details of stray animals being surrendered.     
 
 ![Foster Process](https://github.com/bandola78/StrayConnect/blob/main/images/foster.png) 
+
 Guides users through selecting and fostering an animal.    
 
 ![Reports](https://github.com/bandola78/StrayConnect/blob/main/images/Report.png) 
+
 Displays generated reports for adoptions.          
 
 ## OOP Principles Applied
