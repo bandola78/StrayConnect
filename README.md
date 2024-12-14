@@ -191,6 +191,8 @@ report.generateReport();
 
 ### **Goal 15: Life on Land**
 
+![Life on Land - SDG15](images/logo.png)
+
 Stray Connect directly contributes to the preservation of terrestrial ecosystems and biodiversity by addressing a growing concern: the welfare of stray animals. Here’s how:
 
 - **Promoting Animal Welfare**: Through features like adoption and fostering, Stray Connect ensures that stray animals are given homes and care, reducing their vulnerability and improving their quality of life.
